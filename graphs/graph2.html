@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 0, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0410\u0434\u044b\u0433\u0435\u044f", "shape": "dot"}, {"color": "#97c2fc", "id": 1, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0410\u043b\u0442\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 2, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0411\u0430\u0448\u043a\u043e\u0440\u0442\u043e\u0441\u0442\u0430\u043d", "shape": "dot"}, {"color": "#97c2fc", "id": 3, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0411\u0443\u0440\u044f\u0442\u0438\u044f", "shape": "dot"}, {"color": "#97c2fc", "id": 4, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0414\u0430\u0433\u0435\u0441\u0442\u0430\u043d", "shape": "dot"}, {"color": "#97c2fc", "id": 5, "label": "\u0414\u043e\u043d\u0435\u0446\u043a\u0430\u044f \u041d\u0430\u0440\u043e\u0434\u043d\u0430\u044f \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430", "shape": "dot"}, {"color": "#97c2fc", "id": 6, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0418\u043d\u0433\u0443\u0448\u0435\u0442\u0438\u044f", "shape": "dot"}, {"color": "#97c2fc", "id": 7, "label": "\u041a\u0430\u0431\u0430\u0440\u0434\u0438\u043d\u043e-\u0411\u0430\u043b\u043a\u0430\u0440\u0441\u043a\u0430\u044f \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430", "shape": "dot"}, {"color": "#97c2fc", "id": 8, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u041a\u0430\u043b\u043c\u044b\u043a\u0438\u044f", "shape": "dot"}, {"color": "#97c2fc", "id": 9, "label": "\u041a\u0430\u0440\u0430\u0447\u0430\u0435\u0432\u043e-\u0427\u0435\u0440\u043a\u0435\u0441\u0441\u043a\u0430\u044f \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430", "shape": "dot"}, {"color": "#97c2fc", "id": 10, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u041a\u0430\u0440\u0435\u043b\u0438\u044f", "shape": "dot"}, {"color": "#97c2fc", "id": 11, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u041a\u043e\u043c\u0438", "shape": "dot"}, {"color": "#97c2fc", "id": 12, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u041a\u0440\u044b\u043c[7]", "shape": "dot"}, {"color": "#97c2fc", "id": 13, "label": "\u041b\u0443\u0433\u0430\u043d\u0441\u043a\u0430\u044f \u041d\u0430\u0440\u043e\u0434\u043d\u0430\u044f \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430", "shape": "dot"}, {"color": "#97c2fc", "id": 14, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u041c\u0430\u0440\u0438\u0439 \u042d\u043b", "shape": "dot"}, {"color": "#97c2fc", "id": 15, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u041c\u043e\u0440\u0434\u043e\u0432\u0438\u044f", "shape": "dot"}, {"color": "#97c2fc", "id": 16, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0421\u0430\u0445\u0430 (\u042f\u043a\u0443\u0442\u0438\u044f)", "shape": "dot"}, {"color": "#97c2fc", "id": 17, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0421\u0435\u0432\u0435\u0440\u043d\u0430\u044f \u041e\u0441\u0435\u0442\u0438\u044f \u2014 \u0410\u043b\u0430\u043d\u0438\u044f", "shape": "dot"}, {"color": "#97c2fc", "id": 18, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0422\u0430\u0442\u0430\u0440\u0441\u0442\u0430\u043d", "shape": "dot"}, {"color": "#97c2fc", "id": 19, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0422\u044b\u0432\u0430", "shape": "dot"}, {"color": "#97c2fc", "id": 20, "label": "\u0423\u0434\u043c\u0443\u0440\u0442\u0441\u043a\u0430\u044f \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430", "shape": "dot"}, {"color": "#97c2fc", "id": 21, "label": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u0425\u0430\u043a\u0430\u0441\u0438\u044f", "shape": "dot"}, {"color": "#97c2fc", "id": 22, "label": "\u0427\u0435\u0447\u0435\u043d\u0441\u043a\u0430\u044f \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430", "shape": "dot"}, {"color": "#97c2fc", "id": 23, "label": "\u0427\u0443\u0432\u0430\u0448\u0441\u043a\u0430\u044f \u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u2014 \u0427\u0443\u0432\u0430\u0448\u0438\u044f", "shape": "dot"}, {"color": "#97c2fc", "id": 24, "label": "\u0410\u043b\u0442\u0430\u0439\u0441\u043a\u0438\u0439 \u043a\u0440\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 25, "label": "\u0417\u0430\u0431\u0430\u0439\u043a\u0430\u043b\u044c\u0441\u043a\u0438\u0439 \u043a\u0440\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 26, "label": "\u041a\u0430\u043c\u0447\u0430\u0442\u0441\u043a\u0438\u0439 \u043a\u0440\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 27, "label": "\u041a\u0440\u0430\u0441\u043d\u043e\u0434\u0430\u0440\u0441\u043a\u0438\u0439 \u043a\u0440\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 28, "label": "\u041a\u0440\u0430\u0441\u043d\u043e\u044f\u0440\u0441\u043a\u0438\u0439 \u043a\u0440\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 29, "label": "\u041f\u0435\u0440\u043c\u0441\u043a\u0438\u0439 \u043a\u0440\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 30, "label": "\u041f\u0440\u0438\u043c\u043e\u0440\u0441\u043a\u0438\u0439 \u043a\u0440\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 31, "label": "\u0421\u0442\u0430\u0432\u0440\u043e\u043f\u043e\u043b\u044c\u0441\u043a\u0438\u0439 \u043a\u0440\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 32, "label": "\u0425\u0430\u0431\u0430\u0440\u043e\u0432\u0441\u043a\u0438\u0439 \u043a\u0440\u0430\u0439", "shape": "dot"}, {"color": "#97c2fc", "id": 33, "label": "\u0410\u043c\u0443\u0440\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 34, "label": "\u0410\u0440\u0445\u0430\u043d\u0433\u0435\u043b\u044c\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c[11]", "shape": "dot"}, {"color": "#97c2fc", "id": 35, "label": "\u0410\u0441\u0442\u0440\u0430\u0445\u0430\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 36, "label": "\u0411\u0435\u043b\u0433\u043e\u0440\u043e\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 37, "label": "\u0411\u0440\u044f\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 38, "label": "\u0412\u043b\u0430\u0434\u0438\u043c\u0438\u0440\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 39, "label": "\u0412\u043e\u043b\u0433\u043e\u0433\u0440\u0430\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 40, "label": "\u0412\u043e\u043b\u043e\u0433\u043e\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 41, "label": "\u0412\u043e\u0440\u043e\u043d\u0435\u0436\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 42, "label": "\u0417\u0430\u043f\u043e\u0440\u043e\u0436\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 43, "label": "\u0418\u0432\u0430\u043d\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 44, "label": "\u0418\u0440\u043a\u0443\u0442\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 45, "label": "\u041a\u0430\u043b\u0438\u043d\u0438\u043d\u0433\u0440\u0430\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 46, "label": "\u041a\u0430\u043b\u0443\u0436\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 47, "label": "\u041a\u0435\u043c\u0435\u0440\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c \u2014 \u041a\u0443\u0437\u0431\u0430\u0441\u0441[12]", "shape": "dot"}, {"color": "#97c2fc", "id": 48, "label": "\u041a\u0438\u0440\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 49, "label": "\u041a\u043e\u0441\u0442\u0440\u043e\u043c\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 50, "label": "\u041a\u0443\u0440\u0433\u0430\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 51, "label": "\u041a\u0443\u0440\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 52, "label": "\u041b\u0435\u043d\u0438\u043d\u0433\u0440\u0430\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 53, "label": "\u041b\u0438\u043f\u0435\u0446\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 54, "label": "\u041c\u0430\u0433\u0430\u0434\u0430\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 55, "label": "\u041c\u043e\u0441\u043a\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 56, "label": "\u041c\u0443\u0440\u043c\u0430\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 57, "label": "\u041d\u0438\u0436\u0435\u0433\u043e\u0440\u043e\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 58, "label": "\u041d\u043e\u0432\u0433\u043e\u0440\u043e\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 59, "label": "\u041d\u043e\u0432\u043e\u0441\u0438\u0431\u0438\u0440\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 60, "label": "\u041e\u043c\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 61, "label": "\u041e\u0440\u0435\u043d\u0431\u0443\u0440\u0433\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 62, "label": "\u041e\u0440\u043b\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 63, "label": "\u041f\u0435\u043d\u0437\u0435\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 64, "label": "\u041f\u0441\u043a\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 65, "label": "\u0420\u043e\u0441\u0442\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 66, "label": "\u0420\u044f\u0437\u0430\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 67, "label": "\u0421\u0430\u043c\u0430\u0440\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 68, "label": "\u0421\u0430\u0440\u0430\u0442\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 69, "label": "\u0421\u0430\u0445\u0430\u043b\u0438\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 70, "label": "\u0421\u0432\u0435\u0440\u0434\u043b\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 71, "label": "\u0421\u043c\u043e\u043b\u0435\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 72, "label": "\u0422\u0430\u043c\u0431\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 73, "label": "\u0422\u0432\u0435\u0440\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 74, "label": "\u0422\u043e\u043c\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 75, "label": "\u0422\u0443\u043b\u044c\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 76, "label": "\u0422\u044e\u043c\u0435\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c[14]", "shape": "dot"}, {"color": "#97c2fc", "id": 77, "label": "\u0423\u043b\u044c\u044f\u043d\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 78, "label": "\u0425\u0435\u0440\u0441\u043e\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 79, "label": "\u0427\u0435\u043b\u044f\u0431\u0438\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 80, "label": "\u042f\u0440\u043e\u0441\u043b\u0430\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c", "shape": "dot"}, {"color": "#97c2fc", "id": 81, "label": "\u041c\u043e\u0441\u043a\u0432\u0430", "shape": "dot"}, {"color": "#97c2fc", "id": 82, "label": "\u0421\u0430\u043d\u043a\u0442-\u041f\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433", "shape": "dot"}, {"color": "#97c2fc", "id": 83, "label": "\u0421\u0435\u0432\u0430\u0441\u0442\u043e\u043f\u043e\u043b\u044c[7]", "shape": "dot"}, {"color": "#97c2fc", "id": 84, "label": "\u0415\u0432\u0440\u0435\u0439\u0441\u043a\u0430\u044f \u0410\u041e", "shape": "dot"}, {"color": "#97c2fc", "id": 85, "label": "\u041d\u0435\u043d\u0435\u0446\u043a\u0438\u0439 \u0410\u041e[11]", "shape": "dot"}, {"color": "#97c2fc", "id": 86, "label": "\u0425\u0430\u043d\u0442\u044b-\u041c\u0430\u043d\u0441\u0438\u0439\u0441\u043a\u0438\u0439 \u0410\u041e \u2014 \u042e\u0433\u0440\u0430[14]", "shape": "dot"}, {"color": "#97c2fc", "id": 87, "label": "\u0427\u0443\u043a\u043e\u0442\u0441\u043a\u0438\u0439 \u0410\u041e", "shape": "dot"}, {"color": "#97c2fc", "id": 88, "label": "\u042f\u043c\u0430\u043b\u043e-\u041d\u0435\u043d\u0435\u0446\u043a\u0438\u0439 \u0410\u041e[14]", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": 0, "to": 1, "value": 0.9550063014030457}, {"from": 0, "to": 17, "value": 0.9514310359954834}, {"from": 0, "to": 19, "value": 0.9582332372665405}, {"from": 0, "to": 20, "value": 0.955171525478363}, {"from": 0, "to": 23, "value": 0.9598581790924072}, {"from": 1, "to": 4, "value": 0.9555166363716125}, {"from": 1, "to": 7, "value": 0.9491059184074402}, {"from": 1, "to": 9, "value": 0.9485183954238892}, {"from": 1, "to": 14, "value": 0.9468896389007568}, {"from": 1, "to": 17, "value": 0.9581575393676758}, {"from": 1, "to": 19, "value": 0.9720107316970825}, {"from": 1, "to": 21, "value": 0.9689557552337646}, {"from": 1, "to": 23, "value": 0.9571083784103394}, {"from": 3, "to": 17, "value": 0.9406765699386597}, {"from": 3, "to": 19, "value": 0.9412702322006226}, {"from": 3, "to": 23, "value": 0.9411354064941406}, {"from": 3, "to": 25, "value": 0.9585346579551697}, {"from": 4, "to": 9, "value": 0.9492990970611572}, {"from": 4, "to": 19, "value": 0.9458826780319214}, {"from": 5, "to": 13, "value": 0.986836850643158}, {"from": 6, "to": 8, "value": 0.9593508839607239}, {"from": 6, "to": 17, "value": 0.9470527172088623}, {"from": 6, "to": 25, "value": 0.9488797187805176}, {"from": 6, "to": 51, "value": 0.9438022375106812}, {"from": 6, "to": 54, "value": 0.9414723515510559}, {"from": 6, "to": 63, "value": 0.9409822225570679}, {"from": 6, "to": 68, "value": 0.9415627717971802}, {"from": 7, "to": 9, "value": 0.9723920822143555}, {"from": 7, "to": 17, "value": 0.9537407755851746}, {"from": 7, "to": 19, "value": 0.9484759569168091}, {"from": 7, "to": 21, "value": 0.9552395343780518}, {"from": 8, "to": 17, "value": 0.949440598487854}, {"from": 8, "to": 26, "value": 0.9531924724578857}, {"from": 8, "to": 35, "value": 0.9433145523071289}, {"from": 8, "to": 37, "value": 0.9428530931472778}, {"from": 8, "to": 39, "value": 0.9440779089927673}, {"from": 8, "to": 50, "value": 0.94959557056427}, {"from": 8, "to": 54, "value": 0.9439249038696289}, {"from": 8, "to": 65, "value": 0.9430333375930786}, {"from": 8, "to": 79, "value": 0.9402884244918823}, {"from": 8, "to": 87, "value": 0.9440246820449829}, {"from": 9, "to": 17, "value": 0.9535374641418457}, {"from": 9, "to": 19, "value": 0.9528223276138306}, {"from": 9, "to": 21, "value": 0.9603264331817627}, {"from": 10, "to": 23, "value": 0.940112829208374}, {"from": 12, "to": 25, "value": 0.9404305219650269}, {"from": 14, "to": 17, "value": 0.9455746412277222}, {"from": 14, "to": 19, "value": 0.942263126373291}, {"from": 14, "to": 23, "value": 0.9473192691802979}, {"from": 17, "to": 19, "value": 0.959693431854248}, {"from": 17, "to": 21, "value": 0.9457518458366394}, {"from": 17, "to": 23, "value": 0.9479228854179382}, {"from": 19, "to": 20, "value": 0.9492182731628418}, {"from": 19, "to": 21, "value": 0.9591448903083801}, {"from": 19, "to": 23, "value": 0.9673932790756226}, {"from": 20, "to": 23, "value": 0.9681458473205566}, {"from": 20, "to": 67, "value": 0.9400325417518616}, {"from": 21, "to": 23, "value": 0.9445689916610718}, {"from": 22, "to": 45, "value": 0.9458876848220825}, {"from": 23, "to": 67, "value": 0.94417405128479}, {"from": 23, "to": 77, "value": 0.942003607749939}, {"from": 24, "to": 72, "value": 0.942027747631073}, {"from": 25, "to": 33, "value": 0.9557194709777832}, {"from": 26, "to": 54, "value": 0.9425535202026367}, {"from": 27, "to": 83, "value": 0.9467064738273621}, {"from": 28, "to": 41, "value": 0.9464969038963318}, {"from": 28, "to": 68, "value": 0.9468590617179871}, {"from": 28, "to": 85, "value": 0.9471288919448853}, {"from": 28, "to": 88, "value": 0.9471288919448853}, {"from": 29, "to": 32, "value": 0.942111611366272}, {"from": 29, "to": 33, "value": 0.9429290294647217}, {"from": 29, "to": 41, "value": 0.9412319660186768}, {"from": 29, "to": 42, "value": 0.9420268535614014}, {"from": 29, "to": 45, "value": 0.9500348567962646}, {"from": 29, "to": 48, "value": 0.962110161781311}, {"from": 29, "to": 52, "value": 0.9503493905067444}, {"from": 29, "to": 55, "value": 0.9528224468231201}, {"from": 29, "to": 57, "value": 0.9423085451126099}, {"from": 29, "to": 58, "value": 0.9486142992973328}, {"from": 29, "to": 70, "value": 0.955154299736023}, {"from": 29, "to": 75, "value": 0.9593209028244019}, {"from": 30, "to": 54, "value": 0.947380542755127}, {"from": 32, "to": 39, "value": 0.9468861222267151}, {"from": 32, "to": 45, "value": 0.9585278630256653}, {"from": 32, "to": 70, "value": 0.942766010761261}, {"from": 32, "to": 75, "value": 0.9577634930610657}, {"from": 32, "to": 79, "value": 0.9442982077598572}, {"from": 33, "to": 41, "value": 0.9513561129570007}, {"from": 33, "to": 58, "value": 0.9410321116447449}, {"from": 33, "to": 67, "value": 0.9528427124023438}, {"from": 33, "to": 68, "value": 0.9400770664215088}, {"from": 34, "to": 84, "value": 0.9447436928749084}, {"from": 35, "to": 37, "value": 0.951532781124115}, {"from": 35, "to": 51, "value": 0.9413469433784485}, {"from": 35, "to": 54, "value": 0.9421717524528503}, {"from": 37, "to": 39, "value": 0.9624738693237305}, {"from": 37, "to": 41, "value": 0.9583711624145508}, {"from": 37, "to": 50, "value": 0.9453158378601074}, {"from": 37, "to": 51, "value": 0.962180495262146}, {"from": 37, "to": 62, "value": 0.95098876953125}, {"from": 37, "to": 63, "value": 0.9538205862045288}, {"from": 37, "to": 65, "value": 0.968269407749176}, {"from": 37, "to": 66, "value": 0.9676642417907715}, {"from": 37, "to": 68, "value": 0.9448015093803406}, {"from": 37, "to": 71, "value": 0.9679199457168579}, {"from": 37, "to": 74, "value": 0.9439141750335693}, {"from": 37, "to": 79, "value": 0.9496918320655823}, {"from": 38, "to": 46, "value": 0.9403373003005981}, {"from": 38, "to": 80, "value": 0.9504126310348511}, {"from": 39, "to": 41, "value": 0.9512439370155334}, {"from": 39, "to": 50, "value": 0.946223795413971}, {"from": 39, "to": 51, "value": 0.9593538641929626}, {"from": 39, "to": 58, "value": 0.9424171447753906}, {"from": 39, "to": 62, "value": 0.9443243741989136}, {"from": 39, "to": 65, "value": 0.953615128993988}, {"from": 39, "to": 66, "value": 0.9574406743049622}, {"from": 39, "to": 68, "value": 0.9413163661956787}, {"from": 39, "to": 70, "value": 0.9426024556159973}, {"from": 39, "to": 79, "value": 0.9670130610466003}, {"from": 41, "to": 42, "value": 0.940432608127594}, {"from": 41, "to": 51, "value": 0.9600079655647278}, {"from": 41, "to": 57, "value": 0.9502298831939697}, {"from": 41, "to": 58, "value": 0.955764651298523}, {"from": 41, "to": 63, "value": 0.9470171928405762}, {"from": 41, "to": 65, "value": 0.94310063123703}, {"from": 41, "to": 66, "value": 0.9622066020965576}, {"from": 41, "to": 67, "value": 0.947420060634613}, {"from": 41, "to": 68, "value": 0.9642346501350403}, {"from": 41, "to": 70, "value": 0.9560611844062805}, {"from": 41, "to": 71, "value": 0.9592195749282837}, {"from": 41, "to": 79, "value": 0.955874502658844}, {"from": 42, "to": 45, "value": 0.9467794299125671}, {"from": 42, "to": 67, "value": 0.9435403943061829}, {"from": 42, "to": 70, "value": 0.9406303763389587}, {"from": 42, "to": 75, "value": 0.9475715756416321}, {"from": 42, "to": 78, "value": 0.9722376465797424}, {"from": 44, "to": 57, "value": 0.9720866084098816}, {"from": 44, "to": 58, "value": 0.946498453617096}, {"from": 44, "to": 87, "value": 0.9404498338699341}, {"from": 45, "to": 52, "value": 0.9433581233024597}, {"from": 45, "to": 69, "value": 0.9417484402656555}, {"from": 45, "to": 75, "value": 0.9521520137786865}, {"from": 45, "to": 78, "value": 0.9425990581512451}, {"from": 46, "to": 53, "value": 0.9488881826400757}, {"from": 47, "to": 75, "value": 0.9512736797332764}, {"from": 50, "to": 51, "value": 0.9446762800216675}, {"from": 50, "to": 79, "value": 0.9609257578849792}, {"from": 51, "to": 63, "value": 0.9510039687156677}, {"from": 51, "to": 65, "value": 0.9493844509124756}, {"from": 51, "to": 66, "value": 0.9718179702758789}, {"from": 51, "to": 68, "value": 0.9580223560333252}, {"from": 51, "to": 70, "value": 0.9469624161720276}, {"from": 51, "to": 71, "value": 0.9495594501495361}, {"from": 51, "to": 79, "value": 0.954118549823761}, {"from": 52, "to": 57, "value": 0.9453513622283936}, {"from": 52, "to": 58, "value": 0.9524933695793152}, {"from": 52, "to": 75, "value": 0.9680056571960449}, {"from": 54, "to": 63, "value": 0.947566032409668}, {"from": 54, "to": 65, "value": 0.9444275498390198}, {"from": 54, "to": 74, "value": 0.9630942344665527}, {"from": 55, "to": 75, "value": 0.947810173034668}, {"from": 55, "to": 76, "value": 0.9455076456069946}, {"from": 57, "to": 58, "value": 0.968505322933197}, {"from": 57, "to": 71, "value": 0.940925121307373}, {"from": 57, "to": 75, "value": 0.9492312073707581}, {"from": 58, "to": 60, "value": 0.9521693587303162}, {"from": 58, "to": 75, "value": 0.9623106122016907}, {"from": 58, "to": 79, "value": 0.9495325088500977}, {"from": 60, "to": 79, "value": 0.9407325983047485}, {"from": 62, "to": 65, "value": 0.9498175382614136}, {"from": 62, "to": 66, "value": 0.9401742219924927}, {"from": 63, "to": 65, "value": 0.9483417868614197}, {"from": 63, "to": 66, "value": 0.9675536155700684}, {"from": 63, "to": 68, "value": 0.9515910148620605}, {"from": 63, "to": 71, "value": 0.9420511722564697}, {"from": 63, "to": 72, "value": 0.9558877944946289}, {"from": 63, "to": 74, "value": 0.9515130519866943}, {"from": 63, "to": 77, "value": 0.972518265247345}, {"from": 65, "to": 66, "value": 0.9551665186882019}, {"from": 65, "to": 68, "value": 0.9418138265609741}, {"from": 65, "to": 72, "value": 0.940516471862793}, {"from": 65, "to": 74, "value": 0.9520410299301147}, {"from": 66, "to": 68, "value": 0.9601425528526306}, {"from": 66, "to": 70, "value": 0.9480028748512268}, {"from": 66, "to": 71, "value": 0.9559618830680847}, {"from": 66, "to": 77, "value": 0.9429047703742981}, {"from": 66, "to": 79, "value": 0.9487646818161011}, {"from": 67, "to": 68, "value": 0.9482749700546265}, {"from": 67, "to": 70, "value": 0.952739417552948}, {"from": 68, "to": 70, "value": 0.96044921875}, {"from": 68, "to": 79, "value": 0.9544664621353149}, {"from": 70, "to": 79, "value": 0.9691035747528076}, {"from": 72, "to": 73, "value": 0.9540771842002869}, {"from": 72, "to": 74, "value": 0.9408441185951233}, {"from": 72, "to": 77, "value": 0.9523506760597229}, {"from": 74, "to": 77, "value": 0.9447898864746094}, {"from": 75, "to": 76, "value": 0.9418842792510986}, {"from": 81, "to": 82, "value": 0.9523941874504089}, {"from": 84, "to": 87, "value": 0.9412726163864136}, {"from": 85, "to": 86, "value": 0.9540960788726807}, {"from": 85, "to": 87, "value": 0.947539746761322}, {"from": 85, "to": 88, "value": 1.0000001192092896}, {"from": 86, "to": 88, "value": 0.9540960788726807}, {"from": 87, "to": 88, "value": 0.947539746761322}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
